@@ -1,5 +1,5 @@
-PKG_NAME := modpackages
-URL = https://github.com/insilications/modpackages-clr.git
+PKG_NAME := pygit2
+URL = https://github.com/libgit2/pygit2.git
 ARCHIVES = 
 ARCHIVES_GIT = 
 
