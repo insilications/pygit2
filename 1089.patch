@@ -1,0 +1,33 @@
+From c777aa33f899d9199fb71716e312603fadef6502 Mon Sep 17 00:00:00 2001
+From: rui <rui@chenrui.dev>
+Date: Thu, 2 Sep 2021 17:48:57 -0400
+Subject: [PATCH] build: requires libgit2 1.2.x
+
+update libgit2 to v1.2.0
+
+Signed-off-by: Rui Chen <rui@chenrui.dev>
+
+either libgit 1.1.x or 1.2.x
+
+Revert "update libgit2 to v1.2.0"
+
+This reverts commit 078743ee831bd594df044d17b7772e95d3a9413b.
+---
+ src/types.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/types.h b/src/types.h
+index ff967b81..dabb514c 100644
+--- a/src/types.h
++++ b/src/types.h
+@@ -32,8 +32,8 @@
+ #include <Python.h>
+ #include <git2.h>
+ 
+-#if !(LIBGIT2_VER_MAJOR == 1 && LIBGIT2_VER_MINOR == 1)
+-#error You need a compatible libgit2 version (1.1.x)
++#if !(LIBGIT2_VER_MAJOR == 1 && (LIBGIT2_VER_MINOR == 1 || LIBGIT2_VER_MINOR == 2))
++#error You need a compatible libgit2 version (1.1.x or 1.2.x)
+ #endif
+ 
+ /*
