@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : pygit2
 Version  : 1.6.1
-Release  : 308
+Release  : 311
 URL      : file:///aot/build/clearlinux/packages/pygit2/pygit2-v1.6.1.tar.gz
 Source0  : file:///aot/build/clearlinux/packages/pygit2/pygit2-v1.6.1.tar.gz
 Summary  : No detailed summary available
@@ -43,7 +43,6 @@ BuildRequires : zlib-staticdev
 # Suppress stripping binaries
 %define __strip /bin/true
 %define debug_package %{nil}
-Patch1: 1089.patch
 
 %description
 ######################################################################
@@ -71,7 +70,6 @@ python3 components for the pygit2 package.
 %prep
 %setup -q -n pygit2
 cd %{_builddir}/pygit2
-%patch1 -p1
 
 %build
 unset http_proxy
@@ -79,7 +77,7 @@ unset https_proxy
 unset no_proxy
 export SSL_CERT_FILE=/var/cache/ca-certs/anchors/ca-certificates.crt
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1631676434
+export SOURCE_DATE_EPOCH=1631680186
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
