@@ -1,0 +1,2 @@
+python setup.py egg_info
+python setup.py build_ext -j 16 --inplace

@@ -5,12 +5,14 @@
 %define keepstatic 1
 Name     : pygit2
 Version  : 1.6.1
-Release  : 305
+Release  : 308
 URL      : file:///aot/build/clearlinux/packages/pygit2/pygit2-v1.6.1.tar.gz
 Source0  : file:///aot/build/clearlinux/packages/pygit2/pygit2-v1.6.1.tar.gz
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : GPL-2.0
+Requires: pygit2-python = %{version}-%{release}
+Requires: pygit2-python3 = %{version}-%{release}
 Requires: libgit2
 Requires: libssh2
 BuildRequires : buildreq-cmake
@@ -35,20 +37,41 @@ BuildRequires : python3
 BuildRequires : python3-dev
 BuildRequires : python3-staticdev
 BuildRequires : setuptools-python
+BuildRequires : tox
 BuildRequires : zlib-dev
 BuildRequires : zlib-staticdev
 # Suppress stripping binaries
 %define __strip /bin/true
 %define debug_package %{nil}
+Patch1: 1089.patch
 
 %description
 ######################################################################
 pygit2 - libgit2 bindings in Python
 ######################################################################
 
+%package python
+Summary: python components for the pygit2 package.
+Group: Default
+Requires: pygit2-python3 = %{version}-%{release}
+
+%description python
+python components for the pygit2 package.
+
+
+%package python3
+Summary: python3 components for the pygit2 package.
+Group: Default
+Requires: python3-core
+
+%description python3
+python3 components for the pygit2 package.
+
+
 %prep
 %setup -q -n pygit2
 cd %{_builddir}/pygit2
+%patch1 -p1
 
 %build
 unset http_proxy
@@ -56,7 +79,7 @@ unset https_proxy
 unset no_proxy
 export SSL_CERT_FILE=/var/cache/ca-certs/anchors/ca-certificates.crt
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1631672009
+export SOURCE_DATE_EPOCH=1631676434
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -133,21 +156,25 @@ export GTK_RC_FILES=/etc/gtk/gtkrc
 export FONTCONFIG_PATH=/usr/share/defaults/fonts
 ## altflags1 end
 export MAKEFLAGS=%{?_smp_mflags}
-if [ ! -f setup.py ]; then
-printf "#!/usr/bin/env python\nfrom setuptools import setup\nsetup()" > setup.py
-chmod +x setup.py
-python3 setup.py build
-else
-python3 setup.py build
-fi
+## make_macro start
+python setup.py egg_info
+python setup.py build_ext -j 16 --inplace
+## make_macro end
 
 %install
 export MAKEFLAGS=%{?_smp_mflags}
 rm -rf %{buildroot}
-python3 -tt setup.py build  install --root=%{buildroot}
+python3 -tt setup.py build -j 16 install --root=%{buildroot}
 echo ----[ mark ]----
 cat %{buildroot}/usr/lib/python3*/site-packages/*/requires.txt || :
 echo ----[ mark ]----
 
 %files
 %defattr(-,root,root,-)
+
+%files python
+%defattr(-,root,root,-)
+
+%files python3
+%defattr(-,root,root,-)
+/usr/lib/python3*/*
